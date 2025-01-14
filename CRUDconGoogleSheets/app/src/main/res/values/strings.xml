@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">com.titin.crudcongsheets</string>
+    <string name="add_user">Agregar Usuario</string>
+    <string name="update_user">Actualizar Usuario</string>
+    <string name="view_users">Listar Usuarios</string>
+    <string name="select_image">Seleccionar Imagen</string>
+    <string name="hint_user_lname">Apellido del Usuario</string>
+    <string name="hint_user_name">Nombre del Usuario</string>
+    <string name="hint_user_phone">Teléfono del Usuario</string>
+    <string name="profile_image_description">Imagen del Perfil</string>
+    <string name="edit_user_description">Editar usuario</string>
+    <string name="delete_user_description">Eliminar usuario</string>
+    <string name="hint_user_id">Id del usuario</string>
+    <string name="hint_username">Nombre del usuario</string>
+    <string name="button_update_image">Actualizar Imagen</string>
+    <string name="button_update_user">Actualizar usuario</string>
+    <string name="content_desc_user_photo">Foto del Usuario</string>
+</resources>
