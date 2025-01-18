@@ -14,7 +14,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import androidx.activity.result.contract.ActivityResultContracts
 
-
 abstract class BaseUserActivity<T : ViewBinding> : AppCompatActivity(), View.OnClickListener {
     protected lateinit var binding: T
     protected var userImage: String? = null

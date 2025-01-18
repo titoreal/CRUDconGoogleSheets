@@ -1,5 +1,6 @@
 package com.titin.crudcongsheets
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
@@ -37,7 +38,7 @@ class UserAddActivity : BaseUserActivity<ActivityUserAddBinding>() {
             loading.dismiss()
             binding.btnAddUser.isEnabled = true
             Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-
+            navigateToUserList()
         }
         (application as CrudcongsheetsApplication).requestQueue.add(stringRequest)
     }
@@ -71,7 +72,10 @@ class UserAddActivity : BaseUserActivity<ActivityUserAddBinding>() {
         }
     }
 
-
+    private fun navigateToUserList() {
+        startActivity(Intent(this, UserList::class.java))
+        finish()
+    }
 
     private fun handleError(error: VolleyError) {
         Log.e(TAG, "Error adding user", error)
