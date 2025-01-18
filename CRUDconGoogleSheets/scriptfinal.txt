@@ -51,7 +51,7 @@ function doPost(e) {
 function setup() {
   try {
     // Intenta abrir la hoja de cálculos por su ID
-    var spreadsheetId = "1m0czUjSbAFnJaFg62UNcE80ye4mUGG_cvBcRoVzvGOI"; // REEMPLAZA CON TU ID REAL
+    var spreadsheetId = "ESCRIBE AQUI TU PROPIA URL"; // REEMPLAZA CON TU ID REAL
     var doc = SpreadsheetApp.openById(spreadsheetId);
     
     // Guardar el ID de la hoja de cálculos en las propiedades del script
