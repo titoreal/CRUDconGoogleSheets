@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnAddUser.setOnClickListener {
             startActivity(Intent(this, UserAddActivity::class.java))
         }
+
         binding.btnListUser.setOnClickListener {
             startActivity(Intent(this, UserList::class.java))
         }

@@ -1,0 +1,312 @@
+var SCRIPT_PROP = PropertiesService.getScriptProperties();
+
+function doGet(e) {
+  try {
+    var op = e.parameter.action;
+    
+    if(op == "readAll") return read_all_value(e);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": "Acción Inválida"
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  try {
+    Logger.log("Received parameters: " + JSON.stringify(e.parameter));
+    
+    var op = e.parameter.action;
+    
+    if(op == "insert") {
+      return insert_value(e);
+    } else if(op == "update") {
+      return update_value(e);
+    } else if(op == "delete") {
+      return delete_value(e);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": "Acción Invalida"
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    Logger.log("Error in doPost: " + error.toString());
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function setup() {
+  try {
+    // Intenta abrir la hoja de cálculos por su ID
+    var spreadsheetId = "1m0czUjSbAFnJaFg62UNcE80ye4mUGG_cvBcRoVzvGOI"; // REEMPLAZA CON TU ID REAL
+    var doc = SpreadsheetApp.openById(spreadsheetId);
+    
+    // Guardar el ID de la hoja de cálculos en las propiedades del script
+    SCRIPT_PROP.setProperty("key", spreadsheetId);
+    
+    // Verificar que la hoja "Hoja1" existe
+    var sheet = doc.getSheetByName('User');
+    if (!sheet) {
+      throw new Error("La hoja 'User' no existe en esta hoja de cálculos");
+    }
+    
+    Logger.log("Configuración completada exitosamente. ID de hoja guardado: " + spreadsheetId);
+  } catch (error) {
+    Logger.log("Error en la configuración: " + error.toString());
+    throw error;
+  }
+}
+
+function insert_value(e) {
+  try {
+    // Verificar que setup() se ha ejecutado previamente
+    if (!SCRIPT_PROP.getProperty("key")) {
+      throw new Error("Correr configuración() primera funcion del editor de scripts");
+    }
+
+    var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+    var sheet = doc.getSheetByName('User');
+
+    // Validación de parámetros
+    var uId = e.parameter.uId;
+    var uName = e.parameter.uName;
+    var uApellido = e.parameter.uApellido;
+    var uPhone = e.parameter.uPhone;
+    var uImage = e.parameter.uImage;
+
+    Logger.log("Inserting user - ID: " + uId + ", Name: " + uName + ", Apellido: " + uApellido + ",Phone: " + uPhone + ",Image Length: " + uImage.length);
+
+    if (!uId || !uName ||!uApellido || !uPhone || !uImage) {
+      throw new Error("Falta parámetro requerido");
+    }
+
+    var dropbox = "USERS IMAGE";
+    var folder, folders = DriveApp.getFoldersByName(dropbox);
+
+    if (folders.hasNext()) {
+      folder = folders.next();
+    } else {
+      folder = DriveApp.createFolder(dropbox);
+    }
+
+    var fileName = uId + uName + uApellido + uPhone  + "profile_pic.jpg";
+    var contentType = "image/jpg";
+    var bytes = Utilities.base64Decode(uImage);
+    var blob = Utilities.newBlob(bytes, contentType, fileName);
+    
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    
+    var fileUrl = "https://docs.google.com/spreadsheets/d/" + file.getId() + "/view?usp=drivesdk";
+
+    sheet.appendRow([uId, uName, uApellido, uPhone, fileUrl]);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Éxito",
+      "message": "Usuario agregado exitosamente",
+      "fileUrl": fileUrl
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    Logger.log("Error in insert_value: " + error.toString());
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+function update_value(e) {
+  try {
+    var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+    var sheet = doc.getSheetByName('User');
+    var uId = e.parameter.uId;
+    var uName = e.parameter.uName;
+    var uApellido = e.parameter.uApellido;
+    var uPhone = e.parameter.uPhone;
+    var uImage = e.parameter.uImage;
+
+    // Validate required parameters
+    if (!uId || !uName || !uApellido || !uPhone) {
+      throw new Error("Parámetro requerido ausente");
+    }
+
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] == uId) { 
+        // Always update name
+        sheet.getRange(i + 1, 2).setValue(uName);
+        sheet.getRange(i + 1, 3).setValue(uApellido);  // Agregar esto
+        sheet.getRange(i + 1, 4).setValue(uPhone); 
+
+        // Update image if provided
+        if (uImage && uImage.trim() !== '') {
+          // Delete old image from Drive if it exists
+          var oldImageUrl = data[i][2];
+          if (oldImageUrl) {
+            try {
+              var oldFileId = oldImageUrl.split("/")[5];
+              var oldFile = DriveApp.getFileById(oldFileId);
+              oldFile.setTrashed(true);
+            } catch (e) {
+              // Log error but continue
+              Logger.log("No se puede borrar imagen anterior: " + e.toString());
+            }
+          }
+
+          // Create new image in Drive
+          var dropbox = "USERS IMAGE";
+          var folder, folders = DriveApp.getFoldersByName(dropbox);
+
+          if (folders.hasNext()) {
+            folder = folders.next();
+          } else {
+            folder = DriveApp.createFolder(dropbox);
+          }
+
+          var fileName = uId + uName + uApellido + uPhone + "profile_pic.jpg";
+          var contentType = "image/jpg";
+          var bytes = Utilities.base64Decode(uImage);
+          var blob = Utilities.newBlob(bytes, contentType, fileName);
+          
+          var file = folder.createFile(blob);
+          file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          
+          var fileUrl = "https://docs.google.com/spreadsheets/d/" + file.getId() + "/view?usp=drivesdk";
+
+          // Update image URL in sheet
+          sheet.getRange(i + 1, 5).setValue(fileUrl);
+        }
+
+        return ContentService.createTextOutput(JSON.stringify({
+          "status": "Éxito",
+          "message": "Registro actualizado exitósamente"
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+    throw new Error("Registro no encontrado");
+  } catch (error) {
+    Logger.log("Error en update_value: " + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Función para validar URLs
+function isValidUrl(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;  
+  }
+}
+
+function read_all_value(request){
+  
+  var ss =SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+ 
+  var output  = ContentService.createTextOutput(),
+      data    = {};
+  //Note : here sheet is sheet name , don't get confuse with other operation 
+      var sheet="User";
+
+  data.records = readData_(ss, sheet);
+  
+  
+  var callback = request.parameters.callback;
+  
+  if (callback === undefined) {
+    output.setContent(JSON.stringify(data));
+  } else {
+    output.setContent(callback + "(" + JSON.stringify(data) + ")");
+  }
+  output.setMimeType(ContentService.MimeType.JAVASCRIPT);
+  
+  return output;
+}
+
+
+function readData_(ss, sheetname, properties) {
+
+  if (typeof properties == "undefined") {
+    properties = getHeaderRow_(ss, sheetname);
+    properties = properties.map(function(p) { return p.replace(/\s+/g, '_'); });
+  }
+  
+  var rows = getDataRows_(ss, sheetname),
+      data = [];
+
+  for (var r = 0, l = rows.length; r < l; r++) {
+    var row     = rows[r],
+        record  = {};
+
+    for (var p in properties) {
+      record[properties[p]] = row[p];
+    }
+    
+    data.push(record);
+
+  }
+  return data;
+}
+function delete_value(e) {
+  try {
+    var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+    var sheet = doc.getSheetByName('User');
+
+    var uId = e.parameter.uId;
+    if (!uId) {
+      throw new Error("Parámetro ausente requerido: uId");
+    }
+
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] == uId) { // Suponiendo que la columna 0 tiene el ID
+        sheet.deleteRow(i + 1);
+        return ContentService.createTextOutput(JSON.stringify({
+          "status": "Éxito",
+          "message": "Registro eliminado exitósamente"
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    throw new Error("Registro no encontrado");
+  } catch (error) {
+    Logger.log("Error en delete_value: " + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "Error",
+      "message": error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+
+function getDataRows_(ss, sheetname) {
+  var sh = ss.getSheetByName(sheetname);
+
+  return sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues();
+}
+
+
+function getHeaderRow_(ss, sheetname) {
+  var sh = ss.getSheetByName(sheetname);
+
+  return sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];  
+  
+}

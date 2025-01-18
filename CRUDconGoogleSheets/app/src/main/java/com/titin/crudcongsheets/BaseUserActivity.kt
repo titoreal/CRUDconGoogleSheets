@@ -1,5 +1,6 @@
 package com.titin.crudcongsheets
 
+
 import android.app.ProgressDialog
 import android.graphics.Bitmap;
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.viewbinding.ViewBinding;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import androidx.activity.result.contract.ActivityResultContracts
+
 
 abstract class BaseUserActivity<T : ViewBinding> : AppCompatActivity(), View.OnClickListener {
     protected lateinit var binding: T

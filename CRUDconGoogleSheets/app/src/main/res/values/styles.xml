@@ -20,7 +20,20 @@
     <style name="AppEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
+    <style name="UpdateFormEditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/input_height</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_large</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:padding">8dp</item>
+    </style>
 
+    <style name="UpdateFormButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:background">@color/button_blue</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
     <style name="CircleImageView">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

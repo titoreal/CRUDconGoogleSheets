@@ -48,6 +48,9 @@ class UserListAdapter(
                     .load(imageUrl)
                     .into(userPhoto)
             }
+
+            deleteButton.setOnClickListener { deleteUser(user) }
+            editButton.setOnClickListener { editUser(user) }
         }
     }
 
@@ -57,6 +60,35 @@ class UserListAdapter(
         val userApellido: TextView = view.findViewById(R.id.tv_uapellido)
         val userPhone: TextView = view.findViewById(R.id.tv_uphone)
         val userPhoto: ImageView = view.findViewById(R.id.imageView3)
+        val deleteButton: ImageButton = view.findViewById(R.id.btn_delete_item)
+        val editButton: ImageButton = view.findViewById(R.id.btn_edit_item)
+    }
+    // UserListAdapter.kt
+    private fun deleteUser(user: User) {
+        val stringRequest = object : StringRequest(
+            Method.POST,
+            Configuration.ADD_USER_URL,
+            {
+                Toast.makeText(context, "User Deleted", Toast.LENGTH_SHORT).show()
+                users.remove(user)
+                notifyDataSetChanged()
+            },
+            {
+                Toast.makeText(context, "Delete Failed", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            override fun getParams(): MutableMap<String, String> = hashMapOf(
+                Configuration.Keys.ACTION to "delete",
+                Configuration.Keys.ID to user.id
+            )
+        }
+        requestQueue.add(stringRequest)
+    }
 
+    private fun editUser(user: User) {
+        val intent = Intent(context, UserUpdateActivity::class.java).apply {
+            putExtra("UPDATE_USER", user)
+        }
+        context.startActivity(intent)
     }
 }

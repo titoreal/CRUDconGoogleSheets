@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 object Configuration {
     private const val BASE_WEB_APP_URL =
-        "https://PON AQUI TU PROPIA IMPLEMENTACION"
+        "https://script.google.com/macros/s/AKfycbxwYJPKOvpHDCq4to8rFkrjxcc7XFmdYpbhzMJEKC9A3-P3yLrjt5YIBG8Apr6VTqHU8Q/exec"
 
     const val ADD_USER_URL = BASE_WEB_APP_URL
     const val LIST_USER_URL = "$BASE_WEB_APP_URL?action=readAll"

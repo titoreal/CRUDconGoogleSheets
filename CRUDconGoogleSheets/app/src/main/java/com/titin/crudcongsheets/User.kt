@@ -1,6 +1,5 @@
 package com.titin.crudcongsheets
 
-
 import java.io.Serializable
 
 data class User(

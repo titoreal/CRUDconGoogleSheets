@@ -1,33 +1,26 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("kotlin-parcelize")
 }
-
 
 android {
     namespace = "com.titin.crudcongsheets"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.titin.crudcongsheets"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildFeatures {
         viewBinding = true
-        buildConfig = true
     }
 
     buildTypes {
-        
-        release {            
+        release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -35,7 +28,6 @@ android {
             )
         }
     }
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -51,18 +43,12 @@ dependencies {
     // AndroidX Core
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
-    
-
-
-    // UI
-    implementation(libs.material)
     implementation(libs.constraintlayout)
+    implementation(libs.material)
 
+    // Network
     implementation(libs.volley)
 
     // Image Loading
-
     implementation(libs.picasso)
-
-       
 }

@@ -4,9 +4,9 @@ appcompat = "1.6.1"
 material = "1.11.0"
 constraintlayout = "2.1.4"
 volley = "1.2.1"
-agp = "8.7.1"    # Cambiado de 8.7.1 a 8.2.1
-kotlin = "1.9.22"
 picasso = "2.8"
+agp = "8.7.1"
+kotlin = "1.9.22"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -15,6 +15,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

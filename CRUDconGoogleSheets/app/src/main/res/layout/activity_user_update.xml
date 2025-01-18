@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/et_uid"
+        style="@style/UpdateFormEditText"
+        android:layout_marginTop="24dp"
+        android:hint="@string/hint_user_id"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/et_uname"
+        style="@style/UpdateFormEditText"
+        android:hint="@string/hint_username"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        app:layout_constraintTop_toBottomOf="@id/et_uid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginTop="@dimen/margin_default"/>
+    <EditText
+        android:id="@+id/et_uapellido"
+        style="@style/UpdateFormEditText"
+        android:hint="@string/hint_user_lname"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        app:layout_constraintTop_toBottomOf="@id/et_uname"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginTop="@dimen/margin_default"/>
+    <EditText
+        android:id="@+id/et_uphone"
+        style="@style/UpdateFormEditText"
+        android:hint="@string/hint_user_phone"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        app:layout_constraintTop_toBottomOf="@id/et_uapellido"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginTop="@dimen/margin_default"/>
+
+    <Button
+        android:id="@+id/btn_image"
+        style="@style/UpdateFormButton"
+        android:text="@string/button_update_image"
+        app:layout_constraintTop_toBottomOf="@id/et_uphone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.7"
+        android:layout_marginHorizontal="@dimen/margin_xlarge"
+        android:layout_marginTop="@dimen/margin_default"/>
+
+    <ImageView
+        android:id="@+id/iv_uphoto"
+        android:layout_width="234dp"
+        android:layout_height="215dp"
+        android:layout_marginHorizontal="@dimen/margin_xlarge"
+        android:layout_marginTop="@dimen/margin_default"
+        android:contentDescription="@string/content_desc_user_photo"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_image"
+        app:layout_constraintWidth_percent="0.7"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <Button
+        android:id="@+id/btn_update_user"
+        style="@style/UpdateFormButton"
+        android:layout_marginBottom="16dp"
+        android:text="@string/button_update_user"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_uphoto"
+        app:layout_constraintVertical_bias="0.16"
+        app:layout_constraintWidth_percent="0.6" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
